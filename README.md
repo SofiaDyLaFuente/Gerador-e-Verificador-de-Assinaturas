@@ -39,4 +39,4 @@
     python manage.py runserver
     ```
 
-Após executar o último comando, o sistema estará disponível em `http://127.0.0.1:8000/`.
+Após executar o último comando, o sistema estará disponível em `http://localhost:8000/`.
