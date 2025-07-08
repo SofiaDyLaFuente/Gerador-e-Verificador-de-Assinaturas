@@ -4,251 +4,540 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Assinatura Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --success-dark: #0d9463;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #111827;
+            --darker: #0f172a;
+            --darkest: #020617;
+            --light: #e2e8f0;
+            --lighter: #f1f5f9;
+            --gray: #334155;
+            --gray-light: #64748b;
+            --white: #f8fafc;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease;
+        }
+        
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
         }
         
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            background: var(--darkest);
+            color: var(--white);
             line-height: 1.6;
-            max-width: 1200px;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .app-container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 3rem;
+            padding: 1rem;
         }
         
         h1 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            display: inline-block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+        
+        .subtitle {
+            color: var(--gray-light);
+            font-size: 1.1rem;
+            font-weight: 300;
         }
         
         .container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-            transition: transform 0.3s ease;
+            background: var(--dark);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--gray);
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--white);
+            font-size: 1.2rem;
         }
         
         h2 {
-            color: #3498db;
-            margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--white);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--lighter);
+            font-size: 0.9rem;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray);
             border-radius: 6px;
-            font-size: 1rem;
-            transition: border 0.3s;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: var(--darker);
+            color: var(--white);
         }
         
         input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3);
         }
         
         textarea {
             min-height: 120px;
             resize: vertical;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            padding: 1rem;
         }
         
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background 0.3s;
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
             width: 100%;
         }
         
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            font-size: 100px;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background-color: var(--darker);
+            border: 1px dashed var(--gray);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .file-input-label:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-input-text {
+            color: var(--gray-light);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 1rem;
+        }
+        
+        .file-input-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
         button:hover {
-            background: #2980b9;
+            background: var(--primary-dark);
+        }
+        
+        button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .btn-icon {
+            font-size: 1.1rem;
         }
         
         .result {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
             border-radius: 6px;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: var(--darker);
+            border: 1px solid var(--gray);
             display: none;
         }
         
         .success {
-            color: #27ae60;
+            color: var(--success);
             display: block;
         }
         
         .error {
-            color: #e74c3c;
+            color: var(--danger);
             display: block;
         }
         
         .download-btn {
-            background: #2ecc71;
-            margin-top: 10px;
+            background: var(--success);
+            margin-top: 1rem;
         }
         
         .download-btn:hover {
-            background: #27ae60;
+            background: var(--success-dark);
         }
         
         .verification-result {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 500;
             text-align: center;
-            padding: 15px;
+            padding: 1rem;
             border-radius: 6px;
-            margin-top: 15px;
+            margin-top: 1.25rem;
         }
         
         .valid {
-            background: #d5f5e3;
-            color: #27ae60;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
         }
         
         .invalid {
-            background: #fadbd8;
-            color: #e74c3c;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
         }
         
         footer {
             text-align: center;
-            margin-top: 40px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            margin-top: 3rem;
+            color: var(--gray-light);
+            font-size: 0.85rem;
+            padding: 1rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Efeitos de loading */
+        .loading-dots::after {
+            content: '.';
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.5rem;
+            cursor: help;
+        }
+        
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background-color: var(--gray-light);
+            color: var(--dark);
+            border-radius: 50%;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+        
+        .tooltip:hover .tooltip-icon {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 180px;
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            border-radius: 4px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 0.75rem;
+            border: 1px solid var(--gray);
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Sistema de Assinatura Digital</h1>
-    </header>
-    
-    <div class="container">
-        <!-- Gerar Chaves -->
-        <div class="card">
-            <h2>Gerar Chaves</h2>
-            <div class="form-group">
-                <label for="key-size">Tamanho da Chave (bits):</label>
-                <select id="key-size">
-                    <option value="1024">1024 bits</option>
-                    <option value="2048" selected>2048 bits</option>
-                    <option value="4096">4096 bits</option>
-                </select>
+    <div class="app-container">
+        <header>
+            <h1>Sistema de Assinatura Digital</h1>
+            <p class="subtitle">Assine e verifique documentos com segurança</p>
+        </header>
+        
+        <div class="container">
+            <!-- Gerar Chaves -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔑</div>
+                    <h2>Gerar Chaves</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="key-size">
+                        Tamanho da Chave (bits)
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltip-text">Tamanhos maiores são mais seguros mas mais lentos</span>
+                        </span>
+                    </label>
+                    <select id="key-size">
+                        <option value="1024">1024 bits (rápido)</option>
+                        <option value="2048" selected>2048 bits (recomendado)</option>
+                        <option value="4096">4096 bits (seguro)</option>
+                    </select>
+                </div>
+                
+                <button id="generate-keys">
+                    <span class="btn-icon">⚡</span>
+                    Gerar Chaves
+                </button>
+                
+                <div id="key-results" class="result">
+                    <div class="form-group">
+                        <label for="public-key">Chave Pública:</label>
+                        <textarea id="public-key" readonly></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="private-key">Chave Privada:</label>
+                        <textarea id="private-key" readonly></textarea>
+                    </div>
+                    <button id="download-public" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        Baixar Chave Pública
+                    </button>
+                    <button id="download-private" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        Baixar Chave Privada
+                    </button>
+                </div>
             </div>
-            <button id="generate-keys">Gerar Chaves Pública e Privada</button>
             
-            <div id="key-results" class="result">
-                <div class="form-group">
-                    <label for="public-key">Chave Pública:</label>
-                    <textarea id="public-key" readonly></textarea>
+            <!-- Assinar Documento -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">✍️</div>
+                    <h2>Assinar Documento</h2>
                 </div>
+                
                 <div class="form-group">
-                    <label for="private-key">Chave Privada:</label>
-                    <textarea id="private-key" readonly></textarea>
+                    <label for="document">Documento:</label>
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <span id="document-name" class="file-input-text">Selecione um arquivo</span>
+                            <span class="file-input-button">Procurar</span>
+                        </label>
+                        <input type="file" id="document">
+                    </div>
                 </div>
-                <button id="download-public" class="download-btn">Baixar Chave Pública</button>
-                <button id="download-private" class="download-btn">Baixar Chave Privada</button>
+                
+                <div class="form-group">
+                    <label for="private-key-input">Chave Privada:</label>
+                    <textarea id="private-key-input" placeholder="Cole sua chave privada aqui"></textarea>
+                </div>
+                
+                <button id="sign-document">
+                    <span class="btn-icon">🖋️</span>
+                    Assinar Documento
+                </button>
+                
+                <div id="sign-result" class="result">
+                    <p class="success">✅ Documento assinado com sucesso!</p>
+                    <button id="download-signature" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        Baixar Assinatura
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Verificar Assinatura -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <h2>Verificar Assinatura</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="verify-document">Documento Original:</label>
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <span id="verify-document-name" class="file-input-text">Selecione um arquivo</span>
+                            <span class="file-input-button">Procurar</span>
+                        </label>
+                        <input type="file" id="verify-document">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signature-file">Arquivo de Assinatura:</label>
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <span id="signature-file-name" class="file-input-text">Selecione um arquivo</span>
+                            <span class="file-input-button">Procurar</span>
+                        </label>
+                        <input type="file" id="signature-file">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="public-key-input">Chave Pública:</label>
+                    <textarea id="public-key-input" placeholder="Cole a chave pública aqui"></textarea>
+                </div>
+                
+                <button id="verify-signature">
+                    <span class="btn-icon">🔎</span>
+                    Verificar Assinatura
+                </button>
+                
+                <div id="verification-result" class="result">
+                    <div class="verification-result" id="verification-text">
+                        Resultado da verificação aparecerá aqui
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Assinar Documento -->
-        <div class="card">
-            <h2>Assinar Documento</h2>
-            <div class="form-group">
-                <label for="document">Selecione o documento:</label>
-                <input type="file" id="document">
-            </div>
-            <div class="form-group">
-                <label for="private-key-input">Chave Privada:</label>
-                <textarea id="private-key-input" placeholder="Cole sua chave privada aqui"></textarea>
-            </div>
-            <button id="sign-document">Assinar Documento</button>
-            
-            <div id="sign-result" class="result">
-                <p>Documento assinado com sucesso!</p>
-                <button id="download-signature" class="download-btn">Baixar Assinatura</button>
-            </div>
-        </div>
-        
-        <!-- Verificar Assinatura -->
-        <div class="card">
-            <h2>Verificar Assinatura</h2>
-            <div class="form-group">
-                <label for="verify-document">Documento Original:</label>
-                <input type="file" id="verify-document">
-            </div>
-            <div class="form-group">
-                <label for="signature-file">Arquivo de Assinatura:</label>
-                <input type="file" id="signature-file">
-            </div>
-            <div class="form-group">
-                <label for="public-key-input">Chave Pública:</label>
-                <textarea id="public-key-input" placeholder="Cole sua chave pública aqui"></textarea>
-            </div>
-            <button id="verify-signature">Verificar Assinatura</button>
-            
-            <div id="verification-result" class="result">
-                <div class="verification-result" id="verification-text">
-                    Resultado da verificação aparecerá aqui
-                </div>
-            </div>
-        </div>
+        <footer>
+            <p>Sistema de Assinatura Digital &copy; 2023</p>
+        </footer>
     </div>
-    
-    <footer>
-        <p>Sistema de Assinatura Digital &copy; 2023</p>
-    </footer>
 
     <script>
+        // Atualizar nomes de arquivos selecionados
+        document.getElementById('document').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Selecione um arquivo';
+            document.getElementById('document-name').textContent = fileName;
+        });
+        
+        document.getElementById('verify-document').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Selecione um arquivo';
+            document.getElementById('verify-document-name').textContent = fileName;
+        });
+        
+        document.getElementById('signature-file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Selecione um arquivo';
+            document.getElementById('signature-file-name').textContent = fileName;
+        });
+
         // Gerar Chaves - com tratamento robusto de erros
         document.getElementById('generate-keys').addEventListener('click', async () => {
             const keySize = document.getElementById('key-size').value;
             const button = document.getElementById('generate-keys');
-            const originalText = button.textContent;
+            const originalText = button.innerHTML;
             
             // Mostrar carregando
-            button.textContent = 'Gerando...';
+            button.innerHTML = '<span class="btn-icon loading-dots">⚡</span> Gerando';
             button.disabled = true;
             
             try {
@@ -280,7 +569,9 @@
                 // Mensagem de sucesso
                 const keyResults = document.getElementById('key-results');
                 keyResults.innerHTML = `
-                    <p class="success-message">Chaves geradas e baixadas automaticamente!</p>
+                    <div class="form-group">
+                        <p class="success">✅ Chaves geradas com sucesso!</p>
+                    </div>
                     <div class="form-group">
                         <label>Chave Pública:</label>
                         <textarea id="public-key" readonly>${data.publica}</textarea>
@@ -289,8 +580,14 @@
                         <label>Chave Privada:</label>
                         <textarea id="private-key" readonly>${data.privada}</textarea>
                     </div>
-                    <button id="download-public" class="download-btn">Baixar Chave Pública Novamente</button>
-                    <button id="download-private" class="download-btn">Baixar Chave Privada Novamente</button>
+                    <button id="download-public" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        Baixar Chave Pública
+                    </button>
+                    <button id="download-private" class="download-btn">
+                        <span class="btn-icon">⬇️</span>
+                        Baixar Chave Privada
+                    </button>
                 `;
                 
                 // Reatribuir eventos aos novos botões
@@ -305,94 +602,85 @@
             } catch (error) {
                 // Mostrar erro específico
                 const errorElement = document.getElementById('key-results');
-                errorElement.innerHTML = `<p class="error">Erro: ${error.message}</p>`;
+                errorElement.innerHTML = `<p class="error">❌ Erro: ${error.message}</p>`;
                 errorElement.style.display = 'block';
-                
-                console.error("Erro na geração de chaves:", error);
             } finally {
                 // Restaurar estado do botão independente de sucesso/erro
-                button.textContent = originalText;
+                button.innerHTML = originalText;
                 button.disabled = false;
             }
         });
         
         // Assinar Documento
         document.getElementById('sign-document').addEventListener('click', async () => {
-        const fileInput = document.getElementById('document');
-        const privateKey = document.getElementById('private-key-input').value;
-        
-        if (!fileInput.files.length || !privateKey) {
-            alert('Selecione um documento e insira a chave privada!');
-            return;
-        }
-        
-        try {
-            const formData = new FormData();
-            formData.append('documento', fileInput.files[0]);
-            formData.append('chave_privada', privateKey);
+            const fileInput = document.getElementById('document');
+            const privateKey = document.getElementById('private-key-input').value;
+            const button = document.getElementById('sign-document');
+            const originalText = button.innerHTML;
             
-            const response = await fetch('/api/v1/assinar/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: formData
-            });
-            
-            const data = await response.json();
-            
-            if (data.erro) {
-                showError('sign-result', data.erro);
-            } else {
-                // Faz o download automático da assinatura
-                const fileName = fileInput.files[0].name;
-                const signature = data.assinatura;
-                const signatureData = atob(signature);
-                
-                // Converter para Blob e fazer download
-                const blob = new Blob(
-                    [new Uint8Array([...signatureData].map(char => char.charCodeAt(0)))],
-                    {type: 'application/octet-stream'}
-                );
-                
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `${fileName.split('.')[0]}_assinatura.sig`;
-                link.click();
-                
-                // Mostra mensagem de sucesso
-                document.getElementById('sign-result').style.display = 'block';
-                document.getElementById('sign-result').innerHTML = `
-                    <p class="success">Documento assinado com sucesso!</p>
-                    <button id="download-signature" class="download-btn">Baixar Novamente</button>
-                `;
-                
-                // Adiciona evento ao novo botão
-                document.getElementById('download-signature').addEventListener('click', () => {
-                    link.click();
-                });
+            if (!fileInput.files.length || !privateKey) {
+                alert('Por favor, selecione um documento e insira a chave privada!');
+                return;
             }
-        } catch (error) {
-            showError('sign-result', error.message);
-        }
-    });
-        
-        // Baixar Assinatura
-        document.getElementById('download-signature').addEventListener('click', function() {
-            const fileName = this.dataset.filename;
-            const signature = this.dataset.signature;
-            const signatureData = atob(signature);
             
-            // Converter para Blob e fazer download
-            const blob = new Blob(
-                [new Uint8Array([...signatureData].map(char => char.charCodeAt(0)))],
-                {type: 'application/octet-stream'}
-            );
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `${fileName.split('.')[0]}_assinatura.sig`;
-            link.click();
+            try {
+                button.innerHTML = '<span class="btn-icon loading-dots">🖋️</span> Assinando';
+                button.disabled = true;
+                
+                const formData = new FormData();
+                formData.append('documento', fileInput.files[0]);
+                formData.append('chave_privada', privateKey);
+                
+                const response = await fetch('/api/v1/assinar/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.erro) {
+                    showError('sign-result', data.erro);
+                } else {
+                    // Faz o download automático da assinatura
+                    const fileName = fileInput.files[0].name;
+                    const signature = data.assinatura;
+                    const signatureData = atob(signature);
+                    
+                    // Converter para Blob e fazer download
+                    const blob = new Blob(
+                        [new Uint8Array([...signatureData].map(char => char.charCodeAt(0)))],
+                        {type: 'application/octet-stream'}
+                    );
+                    
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${fileName.split('.')[0]}_assinatura.sig`;
+                    link.click();
+                    
+                    // Mostra mensagem de sucesso
+                    document.getElementById('sign-result').style.display = 'block';
+                    document.getElementById('sign-result').innerHTML = `
+                        <p class="success">✅ Documento assinado com sucesso!</p>
+                        <button id="download-signature" class="download-btn">
+                            <span class="btn-icon">⬇️</span>
+                            Baixar Assinatura
+                        </button>
+                    `;
+                    
+                    // Adiciona evento ao novo botão
+                    document.getElementById('download-signature').addEventListener('click', () => {
+                        link.click();
+                    });
+                }
+            } catch (error) {
+                showError('sign-result', error.message);
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
         });
         
         // Verificar Assinatura
@@ -400,41 +688,56 @@
             const docInput = document.getElementById('verify-document');
             const sigInput = document.getElementById('signature-file');
             const publicKey = document.getElementById('public-key-input').value;
+            const button = document.getElementById('verify-signature');
+            const originalText = button.innerHTML;
             
             if (!docInput.files.length || !sigInput.files.length || !publicKey) {
-                alert('Selecione todos os arquivos e insira a chave pública!');
+                alert('Por favor, selecione todos os arquivos e insira a chave pública!');
                 return;
             }
             
-            const formData = new FormData();
-            formData.append('documento', docInput.files[0]);
-            formData.append('assinatura', sigInput.files[0]);
-            formData.append('chave_publica', publicKey);
-            
-            const response = await fetch('/api/v1/verificar/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: formData
-            });
-            
-            const data = await response.json();
-            const resultElement = document.getElementById('verification-text');
-            
-            if (data.erro) {
-                resultElement.textContent = `Erro: ${data.erro}`;
-                resultElement.className = 'verification-result invalid';
-            } else {
-                if (data.valido) {
-                    resultElement.textContent = '✓ Assinatura VÁLIDA - Documento íntegro';
-                    resultElement.className = 'verification-result valid';
-                } else {
-                    resultElement.textContent = '✗ Assinatura INVÁLIDA - Documento alterado ou assinatura comprometida';
+            try {
+                button.innerHTML = '<span class="btn-icon loading-dots">🔎</span> Verificando';
+                button.disabled = true;
+                
+                const formData = new FormData();
+                formData.append('documento', docInput.files[0]);
+                formData.append('assinatura', sigInput.files[0]);
+                formData.append('chave_publica', publicKey);
+                
+                const response = await fetch('/api/v1/verificar/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                const resultElement = document.getElementById('verification-text');
+                
+                if (data.erro) {
+                    resultElement.textContent = `Erro: ${data.erro}`;
                     resultElement.className = 'verification-result invalid';
+                } else {
+                    if (data.valido) {
+                        resultElement.innerHTML = '✅ Assinatura válida - Documento íntegro';
+                        resultElement.className = 'verification-result valid';
+                    } else {
+                        resultElement.innerHTML = '❌ Assinatura inválida - Documento alterado';
+                        resultElement.className = 'verification-result invalid';
+                    }
                 }
+                document.getElementById('verification-result').style.display = 'block';
+            } catch (error) {
+                const resultElement = document.getElementById('verification-text');
+                resultElement.textContent = `Erro: ${error.message}`;
+                resultElement.className = 'verification-result invalid';
+                document.getElementById('verification-result').style.display = 'block';
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
             }
-            document.getElementById('verification-result').style.display = 'block';
         });
         
         // Funções utilitárias
@@ -448,7 +751,7 @@
         
         function showError(elementId, message) {
             const element = document.getElementById(elementId);
-            element.innerHTML = `<p class="error">Erro: ${message}</p>`;
+            element.innerHTML = `<p class="error">❌ Erro: ${message}</p>`;
             element.style.display = 'block';
         }
         
@@ -456,8 +759,8 @@
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
                 const cookies = document.cookie.split(';');
-                for (const cookieStr of cookies) {
-                    const cookie = cookieStr.trim();
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
