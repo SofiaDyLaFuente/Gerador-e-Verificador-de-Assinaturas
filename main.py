@@ -392,9 +392,8 @@ def main():
             
             # Gerar assinatura
             assinatura_bytes = assinar_bloco_padded(bloco_padded, chave_privada)
-            assinatura_b64 = base64.b64encode(assinatura_bytes).decode('utf-8') 
-
-            with open('assinatura.sig', 'wb') as f:
+            assinatura_b64 = base64.b64encode(assinatura_bytes).decode("utf-8")
+            with open('assinatura.sig', 'w') as f:
                 f.write(assinatura_b64)
             
             print("Mensagem assinada com sucesso!")
@@ -410,6 +409,7 @@ def main():
             if os.path.exists(assinatura):
                 with open(assinatura, "rb") as msg:
                     assinatura_b64 = msg.read()
+                    assinatura_bytes = base64.b64decode(assinatura_b64)
 
             chave_publica_pem = input("Digite o caminho do arquivo da chave pública: ")
             if os.path.exists(chave_publica_pem):
@@ -420,7 +420,7 @@ def main():
 
             valido = verificar_assinatura(
                 documento,
-                assinatura_b64,
+                assinatura_bytes,
                 chave_publica
             )
             
